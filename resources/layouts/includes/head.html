@@ -1,0 +1,22 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    {% if page.title %}
+      {{page.title}}
+    {% else %}
+      {{site.title}}
+    {% endif %}
+  </title>
+
+  <meta name="description" itemprop="description" content="{{site.description|strip-html}}">
+  <meta name="description" itemprop="description" content="{{page.description|default: site.description|strip-html|normalize-whitespace|abbreviate:160}}">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="canonical" href="{{page.url}}">
+
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+</head>

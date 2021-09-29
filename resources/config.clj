@@ -1,0 +1,10 @@
+(defwebsite lucifero "1.0.0"
+  :title       "Lucifero"
+  :description "Generate static webpage for Lucifero"
+  :baseurl     "https://www.example.com"
+  :directory   "resources"
+  :pages-dir   "pages"
+  :public-dir  "public"
+  :layouts-dir "layouts"
+  :dest-dir    "dist"
+  :variables   {:foo "bar"})
