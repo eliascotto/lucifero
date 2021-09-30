@@ -263,16 +263,37 @@ in a map."
   (when-not serve
     (utils/exit 0)))
 
+(defn new-website
+  "Create a new website project in the specified directory."
+  [& {:keys [path] :or {path *cwd*}}]
+  (if (fs/file? path)
+    (throw (IllegalArgumentException. (str path "is a file")))
+    (let [from      (io/file defaults/template-dir)
+          to        (io/file path)
+          trim-size (-> from .getAbsolutePath count inc)
+          dest      #(io/file to (subs (str %) trim-size))]
+      (fs/mkdirs to)
+      (dorun
+       (fs/walk (fn [root dirs files]
+                  (doseq [dir dirs]
+                    (when-not (fs/directory? dir)
+                      (-> root (io/file dir) dest fs/mkdirs)))
+                  (doseq [f files]
+                    (fs/copy+ (io/file root f) (dest (io/file root f)))))
+                from)))))
+
 (defn usage [opts]
-  (->> ["Lucifero - Simple static website generator"
-        ""
-        "Available tasks:"
-        "  watch\tRun a webserver with hot reloading"
-        "  build\tBuild a distributable version"
-        ""
-        "Options:"
-        opts]
-       (string/join \newline)))
+  (let [tasks (->> defaults/cli-tasks
+                   (map #(str "  " (first %) "\t" (second %)))
+                   (clojure.string/join "\n"))]
+    (->> ["Lucifero - Simple static website generator"
+          ""
+          "Available tasks:"
+          tasks
+          ""
+          "Options:"
+          opts]
+         (string/join \newline))))
 
 (def cli-options
   [["-p" "--path PATH" "Path of the project"
@@ -295,7 +316,7 @@ in a map."
       {:exit-message (error-msg errors)}
 
       (and (= 1 (count arguments))
-           (#{"watch", "build", "publish"} (first arguments)))
+           ((set (map first defaults/cli-tasks)) (first arguments)))
       {:action (first arguments) :options options}
 
       :else
@@ -311,7 +332,7 @@ in a map."
     (if exit-message
       (utils/exit (if ok? 0 1) exit-message)
       (case action
-        "watch" (run :serve true
-                     :path  dir-path)
-        "build" (run)))))
+        "watch" (run :path dir-path :serve true)
+        "build" (run :path dir-path)
+        "new"   (new-website :path dir-path)))))
 

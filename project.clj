@@ -1,8 +1,8 @@
-(defproject lucifero "0.1.0"
+(defproject lucifero "0.1.1"
   :description "Static website generator"
-  :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :url "https://github.com/elias94/lucifero"
+  :license {:name "MIT License"
+            :url "https://github.com/elias94/lucifero/blob/master/LICENSE"}
 
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [org.clojure/tools.cli "1.0.206"]
